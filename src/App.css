@@ -1,0 +1,48 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: 500px;
+}
+
+.dropdown-content {
+  max-height: 500px;
+  overflow: auto;
+  text-align: left;
+  /* display: none; */
+  position: absolute;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+  width: 100%;
+}
+
+.autocomplete {
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 1em;
+  width: 100%;
+}
+
+/* .autocomplete:focus + .dropdown-content {
+  display: block;
+} */
+
+@media (max-width: 557px) {
+  .dropdown {
+    width: 85%;
+  }
+  .autocomplete {
+    width: 85%;
+  }
+  .dropdown-content {
+    max-height: 350px;
+    width: 85%;
+  }
+}
