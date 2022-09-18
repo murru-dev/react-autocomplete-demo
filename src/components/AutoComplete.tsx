@@ -1,66 +1,67 @@
-import React, { useState, useEffect } from "react";
-import Highlight from "./Highlight";
+import React, { useState } from 'react'
+import { Country} from '../type'
+import Highlight from './Highlight'
 
-export interface CountriesListProps {
-  countries: Country[];
+interface ListProp {
+  list: Array<Country>
 }
 
-export interface LoadingProp {
-  loading: boolean;
-}
- 
-export interface Country {
-  name: object;
-  flag: string;
-}
+const AutoComplete = ({ list }: ListProp) => {
 
+  // State values
+  const [inputValue, setInputValue] = useState<string>('') // Handles input value
+  const [showList, setShowList] = useState<boolean>(false) // Toggles dropdown rendering
 
-const AutoComplete = ({ countries } : CountriesListProps) => {
-  const [pattern, setPattern] = useState<String>('');
-  const [showList, setShowList] = useState<boolean>(false);
+  // List to render filtered elements
+  const filteredList = list.filter( (country: Country) => {
+    return country.name.toLowerCase().includes(inputValue.toLowerCase())
+  })
 
-  if (countries === undefined) {
-    return (
-      <p>Getting countries... </p>
-    );
-  }
-
-  if (countries !== undefined) {
-    const filtered = countries.filter( (c: Country) => {
-      return c.name.official.toLowerCase().includes(pattern.toLowerCase());
-    });
-
-    const handleOnChange = (val: string): void => {
-      setShowList(val !== '') 
-      setPattern(val)
-    }
-
-    const testEvt = (event: any): void => {
-      setPattern(event.target.textContent)
+  // Handle change everytime a user writes in the input
+  const handleInputChange = (newInputValue: string) => {
+    setInputValue(newInputValue)
+    if (newInputValue !== '') {
+      setShowList(true)
+    } else {
       setShowList(false)
-      console.log(event.target.textContent);
     }
-
-    return (
-      <div className="dropdown">
-        <label htmlFor="">Start writting the country name:</label><br />
-        <input className="autocomplete" list="countries" name="txtCountry" onChange={ ({ target }) => handleOnChange(target.value) } value={ pattern } />
-        { showList &&
-          <div className="dropdown-content">
-            { filtered.length === 0 &&
-              <p>No match found</p>
-            }
-            { filtered.length > 0 &&
-              filtered.map((country: Country, i)=> (
-                <Highlight key={ `country-${i}` } tags={ pattern.split(' ') } testEvt={ testEvt }>
-                  { country.name.official }
-                </Highlight>
-            ))}
-          </div>
-        }
-      </div>
-    );
   }
-};
 
-export default AutoComplete;
+  // Handles the selection of the country in the list
+  const selectOption = (event: React.MouseEvent<HTMLParagraphElement>) => {
+    setInputValue(event.currentTarget.textContent!)
+    setShowList(false)
+  }
+
+  return (
+    <div className="dropdown">
+      <label htmlFor="autocomplete">Start writting the country name:</label><br />
+      <input
+        className="autocomplete"
+        name="txtCountry"
+        onChange={ (event) => handleInputChange(event.target.value) }
+        value={ inputValue }
+      />
+      { showList &&
+        <div className="dropdown-content">
+          { filteredList.length === 0 &&
+            <p>No match found</p>
+          }
+          { filteredList.length > 0 &&
+            filteredList.map(
+              (country: Country, i: number) => (
+                <Highlight
+                  key={`country-${i}`}
+                  country={country.name}
+                  tags={ inputValue.split(' ') }
+                  selectOption={ (event: React.MouseEvent<HTMLParagraphElement>) => selectOption(event) } />
+              )
+            )
+          }
+        </div>
+      }
+    </div>
+  )
+}
+
+export default AutoComplete
