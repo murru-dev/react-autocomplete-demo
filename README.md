@@ -1,7 +1,7 @@
 # react-autocomplete-demo
 
 Simple example that filter countries after writting a valid country name.
-You can see the demo working clicking on [this link](https://react-autocomplete-demo.ekodevs.com/).
+You can see the demo working clicking on [this link](https://react-autocomplete.ekodevs.com/).
 
 ## Tools I used
 - React JS.
